@@ -1,0 +1,395 @@
+#geometrydash #jumpgame #game
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>A Single Cube - Lethal Core</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            touch-action: none;
+        }
+
+        /* --- Start Menu Styles --- */
+        .menu-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #000000; /* Added: Ensures screen starts pitch black */
+            z-index: 20;
+            pointer-events: auto;
+        }
+        
+        .rbx-element { position: absolute; }
+
+        #EQ {
+            left: 47.1%; top: 16.7%;
+            width: 30.1%; height: 65.3%;
+            cursor: pointer;
+        }
+
+        #EF {
+            left: 19.4%; top: 27.5%;
+            width: 20.5%; height: 45.9%;
+            cursor: pointer;
+        }
+
+        #P {
+            left: 14.6%; top: 10.8%;
+            width: 63.5%; height: 75.6%;
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            display: none;
+        }
+
+        #BR {
+            left: 0%; top: 23.2%;
+            width: 100%; height: 77.4%;
+            background-color: #000000;
+            border: 1px solid #ffffff;
+        }
+
+        .info-text {
+            color: #ffffff;
+            text-align: center;
+            width: 97.4%; height: 26.9%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2vh; /* Reduced from 4vh */
+        }
+
+        #K5 {
+            left: 84.4%; top: 3%;
+            width: 13.8%; height: 16.7%;
+            background-color: #000000;
+            border: 2px solid #ff0000;
+        }
+
+        .btn-inner {
+            width: 100%; height: 100%;
+            background: none; border: none;
+            color: #ffffff; font-size: 3vh;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- Gameplay Engine Styles --- */
+        #game-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10;
+        }
+
+        canvas { 
+            display: block; 
+            margin: 0 auto; 
+            background-color: #000; 
+            max-width: 100%; 
+            height: auto; 
+            image-rendering: pixelated; 
+        }
+        
+        #ui { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none; }
+        .timer { font-size: 24px; font-weight: bold; color: #fff; }
+        .progress-container { width: 300px; height: 10px; background: #222; border-radius: 0; margin-top: 5px; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: #fff; transition: width 0.1s; }
+
+        #controls { 
+            position: absolute; 
+            bottom: 170px; 
+            left: 0;
+            width: 100%;
+            z-index: 15;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .btn-hitbox {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            pointer-events: auto;
+            transition: all 0.2s;
+        }
+        .btn-hitbox:hover { background: white; color: black; }
+    </style>
+</head>
+<body>
+
+    <div id="menuLayer" class="menu-layer">
+        <div id="EQ" class="rbx-element">
+            <button id="kn" class="btn-inner" style="background-color: #4e9bff;">Play</button>
+        </div>
+
+        <div id="EF" class="rbx-element">
+            <button id="WL" class="btn-inner" style="background-color: #4e9bff;">Info</button>
+        </div>
+
+        <div id="P" class="rbx-element">
+            <div style="left: 2.4%; top: 4.2%; width: 26.3%; height: 14.4%; color: #ffffff; font-size: 4vh;" class="rbx-element">Info</div>
+            <div id="K5" class="rbx-element"><button id="Y5" class="btn-inner">X</button></div>
+            <div id="BR" class="rbx-element">
+                <div class="rbx-element info-text" style="left: 0.9%; top: 3.8%;">INFORMATION: 1️⃣ The point of this game its just press the PLAY button and make it tho the end, just click in the screen and jump, dodge the spikes to reach rhe 5 minutes Gameplay, seens easy, but is not.</div>
+                <div class="rbx-element info-text" style="left: 0.9%; top: 33.1%;">UPDATES: 2️⃣ April, 13, 2026, no more accurate hitbox... April, 16, 2026, our discord got added... May 15, 2026, Player's hitbox updated, HitBox show button and Vib-ribbon style.
+                </div>
+                <div class="rbx-element info-text" style="left: 1.2%; top: 61.5%;">STATUS: 3️⃣ Verified by the own creator, haves an difficulty of Normal/Hard.
+                </div>
+                <div class="rbx-element info-text" style="left: 0.9%; top: 91.4%; height: 7.7%;">⭕ Discord:https://discord.gg/3rTMumeWq</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-layer">
+        <div id="ui">
+            <div class="timer" id="timerDisplay">5:00</div>
+            <div class="progress-container"><div id="progress-bar"></div></div>
+        </div>
+
+        <div id="controls">
+            <button class="btn-hitbox" id="toggleBtn">Show Hitboxes</button>
+        </div>
+
+        <canvas id="juego" width="800" height="600"></canvas>
+    </div>
+
+    <script>
+        // --- UI Elements ---
+        const menuLayer = document.getElementById('menuLayer');
+        const principalFrame = document.getElementById('P');
+        const playBtn = document.getElementById('kn');
+        const infoBtn = document.getElementById('WL');
+        const quitBtn = document.getElementById('Y5');
+
+        // --- Game Setup Elements ---
+        const canvas = document.getElementById('juego');
+        const ctx = canvas.getContext('2d');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const progressBar = document.getElementById('progress-bar');
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        const LEVEL_DURATION_SECONDS = 300; 
+        let startTime = Date.now();
+        let gameActive = false; 
+        let win = false;
+        let gameOver = false;
+        let showHitbox = false;
+        let isRestarting = false; 
+
+        // --- Menu Logic ---
+        window.addEventListener('DOMContentLoaded', () => {
+            principalFrame.style.display = 'none';
+        });
+
+        playBtn.addEventListener('click', () => {
+            menuLayer.style.display = 'none';
+            gameActive = true;
+            startTime = Date.now(); 
+        });
+
+        infoBtn.addEventListener('click', () => { principalFrame.style.display = 'block'; });
+        quitBtn.addEventListener('click', () => { principalFrame.style.display = 'none'; });
+
+        // --- Gameplay Physics & Logic ---
+        const toggleFunc = (e) => {
+            e.stopPropagation(); 
+            if (e.cancelable) e.preventDefault();
+            showHitbox = !showHitbox;
+            toggleBtn.innerText = showHitbox ? "Hide Hitboxes" : "Show Hitboxes";
+        };
+
+        toggleBtn.addEventListener('mousedown', toggleFunc);
+        toggleBtn.addEventListener('touchstart', toggleFunc, {passive: false});
+
+        const GRAVITY = 0.75;
+        const JUMP_FORCE = -13;
+        const SPIN_SPEED = 0.1;
+        const SHAKE_INTENSITY = 2.0; 
+
+        let plataforma = { x: 0, y: canvas.height - 100, ancho: canvas.width, alto: 3 };
+        let cubo = { x: 50, y: plataforma.y - 50, tamano: 50, velocidad: 6, velocidadY: 0, angulo: 0, grosorPared: 10 };
+        let spikeBase = { ancho: 30, alto: 25, hitboxAncho: 12, hitboxAlto: 15 };
+        let spike = { x: 600, count: 1 };
+
+        function resetGame() {
+            cubo.x = 50;
+            cubo.y = plataforma.y - cubo.tamano;
+            cubo.velocidadY = 0;
+            cubo.angulo = 0;
+            generateSpikes();
+            startTime = Date.now(); 
+            gameOver = false;
+            win = false;
+            gameActive = true;
+            isRestarting = false; 
+        }
+
+        function generateSpikes() {
+            spike.x = 150 + Math.random() * 550; 
+            spike.count = Math.floor(Math.random() * 3) + 1;
+        }
+
+        function getJitter() { return (Math.random() - 0.5) * SHAKE_INTENSITY; }
+        function getNervousAngle() { return ((Math.random() * 40) - 20) * (Math.PI / 180); }
+
+        function actualizar() {
+            if (!gameActive || gameOver || win) return;
+            
+            cubo.x += cubo.velocidad;
+            if (cubo.x > canvas.width) {
+                cubo.x = 50; 
+                generateSpikes();
+            }
+
+            cubo.velocidadY += GRAVITY;
+            cubo.y += cubo.velocidadY;
+
+            if (cubo.y + cubo.tamano > plataforma.y) {
+                cubo.y = plataforma.y - cubo.tamano;
+                cubo.velocidadY = 0;
+                cubo.angulo = 0; 
+            } else {
+                cubo.angulo += SPIN_SPEED;
+            }
+            
+            for (let i = 0; i < spike.count; i++) {
+                const isCenter = (spike.count === 3 && i === 1) || (spike.count === 1) || (spike.count === 2 && i === 0);
+                const currentAncho = isCenter ? 45 : spikeBase.ancho;
+                const currentAlto = isCenter ? 38 : spikeBase.alto;
+                const currentHBW = isCenter ? 18 : spikeBase.hitboxAncho;
+                const currentHBH = isCenter ? 22 : spikeBase.hitboxAlto;
+
+                let currentSpikeX = spike.x + (i * spikeBase.ancho);
+                let hx = currentSpikeX + (currentAncho - currentHBW) / 2;
+                let hy = plataforma.y - currentHBH;
+                
+                if (cubo.x + cubo.tamano > hx && cubo.x < hx + currentHBW && 
+                    cubo.y + cubo.tamano > hy && cubo.y < plataforma.y) {
+                    gameOver = true;
+                    gameActive = false;
+                }
+            }
+            
+            let elapsed = Math.floor((Date.now() - startTime) / 1000);
+            let remaining = Math.max(0, LEVEL_DURATION_SECONDS - elapsed);
+            if (remaining <= 0) { win = true; gameActive = false; }
+            let mins = Math.floor(remaining / 60);
+            let secs = remaining % 60;
+            timerDisplay.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            progressBar.style.width = `${(elapsed / LEVEL_DURATION_SECONDS) * 100}%`;
+        }
+
+        function dibujar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+
+            // Floor
+            const segmentWidth = 15;
+            const gapWidth = 8;
+            let lastEndPoint = { x: 0, y: plataforma.y };
+            for (let i = 0; i < canvas.width; i += (segmentWidth + gapWidth)) {
+                const angle = getNervousAngle();
+                const centerX = i + segmentWidth / 2;
+                const centerY = plataforma.y + getJitter();
+                const cosA = Math.cos(angle), sinA = Math.sin(angle);
+                const x1 = centerX - (segmentWidth / 2) * cosA, y1 = centerY - (segmentWidth / 2) * sinA;
+                const x2 = centerX + (segmentWidth / 2) * cosA, y2 = centerY + (segmentWidth / 2) * sinA;
+                if (i > 0) { ctx.beginPath(); ctx.moveTo(lastEndPoint.x, lastEndPoint.y); ctx.lineTo(x1, y1); ctx.stroke(); }
+                ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+                lastEndPoint = { x: x2, y: y2 };
+            }
+            
+            // Spikes
+            for (let i = 0; i < spike.count; i++) {
+                const isCenter = (spike.count === 3 && i === 1) || (spike.count === 1) || (spike.count === 2 && i === 0);
+                const sAncho = isCenter ? 45 : spikeBase.ancho;
+                const sAlto = isCenter ? 38 : spikeBase.alto;
+                const sHBW = isCenter ? 18 : spikeBase.hitboxAncho;
+                const sHBH = isCenter ? 22 : spikeBase.hitboxAlto;
+
+                const currentSpikeX = spike.x + (i * spikeBase.ancho);
+                const sJitterX = getJitter(), sJitterY = getJitter();
+                
+                ctx.beginPath();
+                ctx.moveTo(currentSpikeX + sJitterX, plataforma.y + sJitterY);
+                ctx.lineTo(currentSpikeX + sAncho / 2 + sJitterX, plataforma.y - sAlto + sJitterY);
+                ctx.lineTo(currentSpikeX + sAncho + sJitterX, plataforma.y + sJitterY);
+                ctx.fill();
+
+                if (showHitbox) {
+                    let shx = currentSpikeX + (sAncho - sHBW) / 2;
+                    let shy = plataforma.y - sHBH;
+                    ctx.lineWidth = 1; ctx.strokeStyle = 'blue';
+                    ctx.strokeRect(shx, shy, sHBW, sHBH);
+                }
+            }
+            
+            // Cube
+            ctx.save();
+            ctx.translate(cubo.x + cubo.tamano / 2, cubo.y + cubo.tamano / 2);
+            ctx.rotate(cubo.angulo);
+            ctx.fillStyle = '#fff';
+            const t = cubo.tamano, g = cubo.grosorPared, h = t / 2;
+            ctx.fillRect(-h, -h, g, t); ctx.fillRect(h - g, -h, g, t);
+            ctx.fillRect(-h, -h, t, g); ctx.fillRect(-h, h - g, t, g);
+            ctx.restore();
+
+            if (showHitbox) {
+                ctx.lineWidth = 1; ctx.strokeStyle = 'red';
+                ctx.strokeRect(cubo.x, cubo.y, cubo.tamano, cubo.tamano);
+            }
+
+            if (gameOver || win) {
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.font = 'bold 60px Courier New';
+                ctx.fillText(gameOver ? 'DIED!' : 'YOU WIN!', canvas.width / 2, canvas.height / 2);
+
+                if (!isRestarting) {
+                    isRestarting = true;
+                    setTimeout(resetGame, 1500); 
+                }
+            }
+            actualizar();
+            requestAnimationFrame(dibujar);
+        }
+
+        const handleInput = () => {
+            if (!gameActive || gameOver || win) return; 
+            if (cubo.velocidadY === 0) cubo.velocidadY = JUMP_FORCE;
+        };
+        
+        canvas.addEventListener('touchstart', (e) => { 
+            if(e.target === canvas) {
+                e.preventDefault(); 
+                handleInput(); 
+            }
+        }, {passive: false});
+
+        canvas.addEventListener('mousedown', (e) => {
+            if(e.target === canvas) {
+                handleInput();
+            }
+        });
+        
+        generateSpikes();
+        dibujar();
+    </script>
+</body>
+</html>
