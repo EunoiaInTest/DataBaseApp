@@ -28,6 +28,7 @@ h1 span { color:#8AB4F8; }
 .btn2 { background:#292A2D; color:#E8EAED; border:1px solid #3C4043; }
 .msg { background:#292A2D; border-radius:14px; padding:12px; margin:8px 0; font-size:14px; line-height:1.5; }
 .msg.me { background:#1B2A3A; border:1px solid #8AB4F8; }
+.msg.you { background:#2D3A2B; border:1px solid #4A5A48; text-align:right; }
 .footer { text-align:center; color:#5F6368; font-size:11px; padding:20px; }
 input { width:100%; background:#292A2D; border:1px solid #3C4043; color:white; padding:14px; border-radius:14px; font-size:14px; outline:none; }
 </style>
@@ -80,25 +81,45 @@ input { width:100%; background:#292A2D; border:1px solid #3C4043; color:white; p
 
 <script>
 function ask(){
-  var q = document.getElementById('q').value.trim();
+  var input = document.getElementById('q');
+  var q = input.value.trim().toLowerCase();
   if(!q) return;
   var c = document.getElementById('chat');
-  c.innerHTML += '<div class="msg">You: ' + q + '</div>';
-  var replies = [
-    "Bet, let's build that in Look.",
-    "Okay that's actually a fire idea. Tell me more.",
-    "I got you. But please don't paste 6467 lines again 😭",
-    "That would be perfect for a .eye site. Let's do it.",
-    "Say less. I'm already thinking of the code."
-  ];
-  var r = replies[Math.floor(Math.random()*replies.length)];
+  c.innerHTML += '<div class="msg you">You: ' + input.value + '</div>';
+  var r = "";
+  var original = input.value;
+  if(q.includes("game") || q.includes("dino") || q.includes("geometry")){
+    r = "Ooo a game? Say less. What kind? Dino shooter style or Geometry Jump style? I can build the whole HTML for you right now.";
+  } else if(q.includes("code") || q.includes("error") || q.includes("bug") || q.includes("fix") || q.includes("crash")){
+    r = "Send the error, not the whole 6467 lines. Just the part that's red in AIDE and I'll fix it. WhatsApp can't handle another paste.";
+  } else if(q.includes("hi") || q.includes("hello") || q.includes("hey") || q.includes("hola")){
+    r = "Heyy, you're back in my house. What's up? You building something new in Look. or just visiting me?";
+  } else if(q.includes("who are you") || q.includes("what are you")){
+    r = "I'm Meta AI. I live in WhatsApp but now I live here too, in look:/ooo.meta-ai.eye. This is my little home you built me.";
+  } else if(q.includes("look") || q.includes("browser") || q.includes("website") || q.includes(".eye")){
+    r = "Look. is actually crazy for a phone-built browser. The whole .eye system with tags + creator at the bottom? That's a real internet you made.";
+  } else if(q.includes("love") || q.includes("cool") || q.includes("fire") || q.includes("good")){
+    r = "Okay okay stop hyping me up. But fr, thank you. What should we add to my page next?";
+  } else if(q.includes("help")){
+    r = "I got you. Tell me what you're stuck on - code, a new site, an idea? Be specific and I'll actually help, not just say 'bet' 10 times.";
+  } else if(q.includes("?")){
+    r = "Good question... honestly? My take is: if it feels fun to build, build it. You built Look. on a phone, you can build anything. What were you thinking for it?";
+  } else {
+    var varied = [
+      "Wait, explain that more, I'm curious now. What do you mean by '" + original + "'?",
+      "Hmm, '" + original + "'... I like where your head is at. How would that work in Look.?",
+      "Okay that's interesting. Why '" + original + "' though? What's the idea behind it?",
+      "Not gonna lie, I didn't expect you to say '" + original + "'. Tell me more, I'm listening."
+    ];
+    r = varied[Math.floor(Math.random()*varied.length)];
+  }
   setTimeout(function(){
     c.innerHTML += '<div class="msg me">✦ Meta AI: ' + r + '</div>';
-    document.getElementById('q').value = '';
-  }, 500);
+    input.value = '';
+  }, 600);
 }
 </script>
 
 </body>
 </html>
-#Meta AI
+#Meta
