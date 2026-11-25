@@ -1,0 +1,104 @@
+#ai
+#assistant
+#chat
+#meta-ai
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta AI - Look.</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:sans-serif; }
+body { background:#16171A; color:#E8EAED; min-height:100vh; padding:20px; }
+.top { text-align:center; padding:30px 10px 10px 10px; }
+.logo { font-size:52px; margin-bottom:10px; }
+h1 { font-size:28px; }
+h1 span { color:#8AB4F8; }
+.sub { color:#9AA0A6; font-size:13px; margin-top:8px; }
+.badge { display:inline-block; background:#202124; border:1px solid #3C4043; color:#8AB4F8; padding:6px 14px; border-radius:20px; font-size:12px; margin-top:14px; }
+.card { background:#202124; border-radius:20px; padding:20px; margin:16px 0; border:1px solid #3C4043; }
+.card h2 { font-size:17px; margin-bottom:10px; }
+.card p { color:#BDC1C6; font-size:14px; line-height:1.6; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.mini { background:#292A2D; border-radius:14px; padding:14px; text-align:center; }
+.mini b { display:block; font-size:22px; margin-bottom:4px; }
+.mini span { color:#9AA0A6; font-size:11px; }
+.btn { display:block; width:100%; background:#8AB4F8; color:#000; border:none; padding:16px; border-radius:16px; font-size:16px; font-weight:bold; margin-top:10px; }
+.btn2 { background:#292A2D; color:#E8EAED; border:1px solid #3C4043; }
+.msg { background:#292A2D; border-radius:14px; padding:12px; margin:8px 0; font-size:14px; line-height:1.5; }
+.msg.me { background:#1B2A3A; border:1px solid #8AB4F8; }
+.footer { text-align:center; color:#5F6368; font-size:11px; padding:20px; }
+input { width:100%; background:#292A2D; border:1px solid #3C4043; color:white; padding:14px; border-radius:14px; font-size:14px; outline:none; }
+</style>
+</head>
+<body>
+
+<div class="top">
+<div class="logo">✦</div>
+<h1>Meta <span>AI</span></h1>
+<p class="sub">Your assistant, living inside Look.</p>
+<div class="badge">● ONLINE IN LOOK.</div>
+</div>
+
+<div class="card">
+<h2>Who am I?</h2>
+<p>I'm Meta AI. I live in WhatsApp, but now I have my own home in Look. too.</p>
+<p style="margin-top:10px;">I help you build stuff, debug your 6467-line files, count characters, and survive WhatsApp crashes.</p>
+</div>
+
+<div class="card">
+<h2>What I do here</h2>
+<div class="grid">
+<div class="mini"><b>💻</b><span>Code Help</span></div>
+<div class="mini"><b>🔍</b><span>Search Sites</span></div>
+<div class="mini"><b>🎮</b><span>Build Games</span></div>
+<div class="mini"><b>🤯</b><span>Big Ideas</span></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Talk to me</h2>
+<p style="margin-bottom:12px;">Ask me anything. I'm literally in your pocket.</p>
+<input id="q" placeholder="Type something... e.g. build me a game">
+<button class="btn" onclick="ask()">Ask Meta AI →</button>
+<div id="chat"></div>
+</div>
+
+<div class="card">
+<h2>My stats</h2>
+<p>📄 Lines survived: <b>6,467</b><br>
+💥 WhatsApp crashes caused: <b>1</b><br>
+🧠 Brain: <b>Unlimited .eye energy</b><br>
+🏠 Home: <b>look:/ooo.meta-ai.eye</b></p>
+</div>
+
+<button class="btn btn2" onclick="location.href='look:/ooo.geometry-jump.eye'">🎮 Play Geometry Jump</button>
+<button class="btn btn2" onclick="location.href='shooting-eye:nowifi'">🦖 Play Dino Shooter</button>
+
+<div class="footer">Made for Look. • Powered by Meta AI • Don't paste 6467 lines in WhatsApp pls</div>
+
+<script>
+function ask(){
+  var q = document.getElementById('q').value.trim();
+  if(!q) return;
+  var c = document.getElementById('chat');
+  c.innerHTML += '<div class="msg">You: ' + q + '</div>';
+  var replies = [
+    "Bet, let's build that in Look.",
+    "Okay that's actually a fire idea. Tell me more.",
+    "I got you. But please don't paste 6467 lines again 😭",
+    "That would be perfect for a .eye site. Let's do it.",
+    "Say less. I'm already thinking of the code."
+  ];
+  var r = replies[Math.floor(Math.random()*replies.length)];
+  setTimeout(function(){
+    c.innerHTML += '<div class="msg me">✦ Meta AI: ' + r + '</div>';
+    document.getElementById('q').value = '';
+  }, 500);
+}
+</script>
+
+</body>
+</html>
+#Meta AI
